@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <title>Login</title>
+</head>
+<body>
+    <form action="" method="post">
+        {% csrf_token %}
+    <div class="login-box">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="message-box message-{{ message.tags }}">
+                {{ message | safe }}
+            </div>
+            {% endfor %}
+        {% endif %}
+        <div class="login-header">
+            <header>Login</header>
+        </div>
+        <div class="input-box">
+            <input type="text" name="username" id="" class="input-field" autocomplete="off" required placeholder="Username">
+        </div>
+        <!-- <div class="input-box">
+            <input type="email" name="email" id="" class="input-field">
+        </div> -->
+        <div class="input-box">
+            <input type="password" name="password" id="passwordField" class="input-field" autocomplete="off" required placeholder="Password">
+        </div>
+        <div class="forgot">
+            <section>
+                <input type="checkbox" name="" id="check">
+                <label for="check">Show password</label>
+            </section>
+        </div>
+        <div class="input-submit">
+            <button class="submit-btn" id="submit" type="submit"></button>
+            <label for="submit">Sign in</label>
+        </div>
+        <div class="sign-up-link">
+            <p>Dont have an account?<a href="{% url 'register' %}">Create one</a></p>
+        </div>
+    </div>
+    </form>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordFields = document.querySelectorAll('input[type="password"]');
+            const checkbox = document.getElementById('check');
+
+            checkbox.addEventListener('change', function() {
+                passwordFields.forEach(field => {
+                    field.type = this.checked ? 'text' : 'password';
+                });
+            });
+
+            // Add this new part for message fading
+            const messages = document.querySelectorAll('.message-box');
+            messages.forEach(function(message) {
+                setTimeout(function() {
+                    message.classList.add('fade-out');
+                    setTimeout(function() {
+                        message.style.display = 'none';
+                    }, 300); // Wait for fade out animation to complete
+                }, 5000); // 5 seconds delay before starting to fade out
+            });
+        });
+    </script>
+    
+</body>
+</html>

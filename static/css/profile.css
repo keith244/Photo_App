@@ -1,0 +1,166 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;600;700&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #dfdfdf;
+    flex-direction: column;
+}
+
+.profile-box{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 440px;
+    padding: 30px;
+    background: #fff;
+    box-shadow: 0px 5px 10px 1px rgba(0, 0, 0, 0.05);
+    border-radius: 30px;
+}
+
+.profile-header{
+    text-align: center;
+    margin: 20px 0 40px 0;
+}
+
+.profile-header header{
+    color: #333;
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.profile-image-container {
+    text-align: center;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.profile-image-container img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid #dfdfdf;
+}
+
+.change-image-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #008cba;
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.change-image-btn:hover {
+    background-color: #0073a8;
+}
+
+
+
+.input-box {
+    margin-bottom: 20px;
+}
+
+.input-box .input-field {
+    width: 100%;
+    height: 100px;
+    font-size: 17px;
+    padding: 20px;
+    border-radius: 30px;
+    border: none;
+    box-shadow: 0px 5px 10px 1px rgba(0, 0, 0, 0.05);
+    outline: none;
+    resize: none;
+    transition: .3s;
+}
+
+::placeholder {
+    font-weight: 500;
+    color: #222;
+}
+
+.input-field:focus {
+    width: 105%;
+}
+
+.input-submit {
+    position: relative;
+}
+
+.submit-btn {
+    width: 100%;
+    height: 60px;
+    color: 60px;
+    background: #222;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.input-submit label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    color: #fff;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+}
+
+.submit-btn:hover {
+    background: #000;
+    transform: scale(1.05, 1);
+}
+
+/* Add this to your existing CSS file */
+
+.message-box {
+    width: 100%;
+    max-width: 440px;
+    margin: 10px auto;
+    padding: 15px 25px;
+    border-radius: 30px;
+    font-size: 14px;
+    text-align: center;
+    transition: opacity 0.3s ease;
+    box-shadow: 0px 5px 10px 1px rgba(0, 0, 0, 0.05);
+}
+
+.message-success {
+    background-color: #e8f5e9;
+    border: 1px solid #4caf50;
+    color: #4caf50;
+}
+
+.message-warning {
+    background-color: #fff3e0;
+    border: 1px solid #ff9800;
+    color: #ff9800;
+}
+
+.message-error {
+    background-color: #ffebee;
+    border: 1px solid #f44336;
+    color: #f44336;
+}
+
+.message-info {
+    background-color: #e3f2fd;
+    border: 1px solid #2196f3;
+    color: #2196f3;
+}
+
+.message-box.fade-out {
+    opacity: 0;
+}

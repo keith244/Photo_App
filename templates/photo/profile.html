@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
+    <title>Edit Profile</title>
+</head>
+<body>
+
+    <div class="profile-box">
+        <div class="profile-header">
+            <header>{{ profile.user.username }}'s Profile</header>
+        </div>
+        <div class="profile-image-container">
+            {% if profile.image %}
+                <img src="{{ profile.image.url }}" alt="{{ profile.user.username }}'s profile" id="profile-image">
+            {% else %}
+                <img src="{% static 'path/to/default-profile.jpg' %}" alt="Default profile" id="profile-image">
+            {% endif %}
+        </div>
+        <div class="about-section" style="text-align: center;">
+            <h3>About</h3>
+            <p>{{ profile.about }}</p>
+        </div>
+    
+        {% if is_own_profile %}
+            <form id="profile-form" enctype="multipart/form-data" method="post">
+                {% csrf_token %}
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="message-box message-{{ message.tags }}">
+                        {{ message | safe }}
+                    </div>
+                    {% endfor %}
+                {% endif %}
+                <div class="profile-header">
+                    <header>Edit Profile</header>
+                </div>
+                <div class="profile-image-container">
+                    <label for="image-upload" class="change-image-btn">Change Image</label>
+                    <input type="file" id="image-upload" name="image" accept="image/*" style="display: none;">
+                </div>
+                <div class="input-box">
+                    <textarea id="about-input" name="about" class="input-field" placeholder="Tell us about yourself...">{{ profile.about }}</textarea>
+                </div>
+                <div class="input-submit">
+                    <button class="submit-btn" id="submit" type="submit"></button>
+                    <label for="submit">Save Changes</label>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageUpload = document.getElementById('image-upload');
+            const profileImage = document.getElementById('profile-image');
+            const messages = document.querySelectorAll('.message-box');
+
+            imageUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        profileImage.src = e.target.result;
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            messages.forEach(function(message) {
+                setTimeout(function() {
+                    message.classList.add('fade-out');
+                    setTimeout(function() {
+                        message.style.display = 'none';
+                    }, 300);
+                }, 5000);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/image.css' %}">
+    <style>
+        .messages-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        .message-box {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 20px;
+            background-color: #fff;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            text-align: left;
+        }
+        .message-box:hover {
+            transform: translateY(-5px);
+        }
+        .message-info {
+            border-left: 5px solid #4682b4;
+        }
+        .message-warning {
+            border-left: 5px solid #ffa07a;
+        }
+        .message-error {
+            border-left: 5px solid #ff6347;
+        }
+        
+    </style>
+    <title>Pic-ASSO</title>
+</head>
+<body>
+    <nav>
+        <div class="nav-links" id="navLinks">
+            <ul>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'create_post' %}">Create Post</a></li>
+                    <li><a href="{% url 'profile' user.username %}">View Profile</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'register' %}">Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    <div class="header">
+        {% if user.is_authenticated %}
+            <h3>Hello <span style="border-bottom: 2px solid red;">{{ user.username|title }}</span></h3>
+        {% else %}
+            <h3>Welcome, Guest</h3>
+        {% endif %}
+        {% if messages %}
+        <div class="messages-container">
+            {% for message in messages %}
+            <div class="message-box message-{{ message.tags }}">
+                {{ message | safe }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <div class="container">
+        <div class="filter-buttons">
+            <button class="active" data-name="all">Show all</button>
+            <button data-name="phones">Phone</button>
+            <button data-name="clothes">Clothes</button>
+            <button data-name="shoes">Shoes</button>
+        </div>
+
+        <!-- images -->
+         <div class="filterable-cards">
+            {% for post in posts %}
+            <div class="card" data-name="{{ post.category }}">
+                <a href="{% url 'profile' post.user.username %}" class="profile-image-link">
+                    <div class="profile-image">
+                        {% if post.user.profile.image %}
+                            <img src="{{ post.user.profile.image.url }}" alt="{{ post.user.username }}'s profile">
+                        {% else %}
+                            <img src="{% static 'images/orangutan.jpg' %}" alt="{{ post.user.username }}'s profile">
+                        {% endif %}
+                    </div>
+                </a>
+                <div class="card-image-container">
+                    <img src="{{post.image.url}}" alt="Default Image">
+                </div>
+                <div class="card-body">
+                    <h6 class="card-title">{{ post.title }}</h6>
+                    <p class="card-text">{{ post.about|truncatewords:10 }}</p>
+                    <small>Posted by: <span class="username">{{ post.user.username }}</span></small>
+                    <a href="{% url 'photo_details' post.id %}">View details</a>
+                </div>
+            </div>
+        {% empty %}
+            <p>No posts available.</p>
+        {% endfor %}
+         </div>
+    <script src="{% static 'js/gallery.js' %}"></script>
+    <script>
+        // Wait for the DOM to be fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        // Select all elements with the class 'message-box'
+        const messages = document.querySelectorAll('.message-box');
+
+        // Function to fade out and remove a message
+        function fadeOutAndRemove(element) {
+            let opacity = 1;
+            const fadeEffect = setInterval(function() {
+                if (opacity > 0) {
+                    opacity -= 0.1;
+                    element.style.opacity = opacity;
+                } else {
+                    clearInterval(fadeEffect);
+                    element.style.display = 'none';
+                }
+            }, 50);
+        }
+
+        // Set a timeout for each message
+        messages.forEach(function(message) {
+            setTimeout(function() {
+                fadeOutAndRemove(message);
+            }, 5000); // 5000 milliseconds = 5 seconds
+        });
+    });
+    </script>
+</body>
+</html>

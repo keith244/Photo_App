@@ -1,0 +1,88 @@
+.image-details-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(9, 0, 0, 0.5);
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.image-container {
+    width: 100%;
+    max-height: none; /* Remove max-height constraint */
+    overflow: visible; /* Change from hidden to visible */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0; /* Light grey background */
+}
+
+.image-container img {
+    max-width: 100%;
+    max-height: 80vh; /* Limit height to 80% of viewport height */
+    width: auto;
+    height: auto;
+    object-fit: contain; /* Change from cover to contain */
+    object-position: center;
+}
+.details-content {
+    padding: 20px;
+}
+
+.image-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.username {
+    font-weight: 500;
+    color: #4070f4;
+}
+
+.date-posted {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.image-description h3 {
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.image-description p {
+    font-size: 16px;
+    color: #444;
+    line-height: 1.6;
+}
+
+.read-more-btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #4070f4;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+}
+
+.read-more-btn:hover {
+    background-color: #3060e0;
+}
