@@ -9,4 +9,5 @@ urlpatterns = [
     path('photo_details/<int:post_id>/',views.post_details, name='photo_details'),
     path('update_post/<int:post_id>/', views.update_post, name='update_post'),
     path('delete_post/<int:post_id>/', views.delete_post, name='delete_post'),
+    path('user/<str:username>/posts/', views.user_posts, name='user_posts'),
 ]

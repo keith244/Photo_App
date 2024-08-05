@@ -58,39 +58,48 @@ def profile_view(request,user_id):
 
 @login_required(login_url='login')
 def create_post(request):
+    context = {
+        'title': '',
+        'about': '',
+        'category': '',
+        'user_posts': Post.objects.filter(user=request.user).order_by('-date_created')
+    }
     if request.method == 'POST':
         image = request.FILES.get('image')
         title = request.POST.get('title')
         about = request.POST.get('about')
         category = request.POST.get('category')
 
+        context.update({
+            'title': title,
+            'about': about,
+            'category': category
+        })
+
         if not image:
-            messages.error(request, f'Please upload an image')
-            return render(request,'photo/upload_photo.html')
-        
-        allowed_extensions = ['jpg','jpeg','png','gif']
-        validator = FileExtensionValidator(allowed_extensions=allowed_extensions)
-        try:
-            validator(image)
-        except ValidationError:
-            messages.error(request, 'Invalid file type.Please upload a JPG,JPEG,PNG or GIF .')
-            return render(request, 'photo/upload_photo.html')
-
-        if all([image and title and about and category]):
-            Post.objects.create(
-                user = request.user,
-                image = image,
-                title = title,
-                about = about,
-                category= category,
-            )
-            messages.success(request, 'Post created successfully')
-            return redirect('index')
+            messages.error(request, 'Please upload an image')
         else:
-            messages.error(request,'Please fill all required fields.')
+            allowed_extensions = ['jpg', 'jpeg', 'png', 'gif']
+            validator = FileExtensionValidator(allowed_extensions=allowed_extensions)
+            try:
+                validator(image)
+            except ValidationError:
+                messages.error(request, 'Invalid file type. Please upload a JPG, JPEG, PNG or GIF.')
+            else:
+                if all([image, title, about, category]):
+                    Post.objects.create(
+                        user=request.user,
+                        image=image,
+                        title=title,
+                        about=about,
+                        category=category,
+                    )
+                    messages.success(request, 'Post created successfully')
+                    return redirect('index')
+                # else:
+                #     messages.error(request, 'Please fill all required fields.')
 
-    user_posts = Post.objects.filter(user= request.user).order_by('-date_created')
-    return render(request, 'photo/upload_photo.html',{'user_posts':user_posts})
+    return render(request, 'photo/upload_photo.html', context)
 
 def post_details(request, post_id):
     post = get_object_or_404 (Post, id= post_id)
@@ -119,6 +128,20 @@ def update_post(request, post_id):
 
 @login_required(login_url='login')
 def delete_post(request, post_id):
-    post = get_object_or_404(Post, id = post_id, user= request.user)
-    post.delete()
-    return render(request,'photo/delete_post.html')
+    post = get_object_or_404(Post, id=post_id, user=request.user)
+    
+    if request.method == 'POST':
+        post.delete()
+        messages.success(request, 'Post deleted successfully')
+        return redirect('index')  # or wherever you want to redirect after deletion
+    
+    return render(request, 'photo/delete_post.html', {'post': post})
+
+def user_posts(request,username):
+    user = get_object_or_404(User, username= username)
+    posts = Post.objects.filter(user=user).order_by('-date_created')
+    context = {
+        'user':user,
+        'posts':posts
+    }
+    return render(request, 'photo/user-posts.html', context)

@@ -17,9 +17,9 @@
                         <form method="post" enctype="multipart/form-data">
                             {% csrf_token %}
                             <div class="mb-3">
-                                <label class="form-label">Current Image</label>
+                                <label class="form-label ">Current Image</label>
                                 <div class="text-center">
-                                    <img src="{{ post.image.url }}" alt="Current post image" class="img-fluid mb-2" style="max-height: 200px;">
+                                    <img src="{{ post.image.url }}" alt="Current post image" class="img-fluid mb-2 border border-info rounded-circle" style="max-height: 200px;">
                                 </div>
                             </div>
                             <div class="mb-3">
@@ -34,8 +34,18 @@
                                 <label for="about" class="form-label">About</label>
                                 <textarea class="form-control" id="about" name="about" rows="3">{{ post.about }}</textarea>
                             </div>
+                            <div class="form-floating mb-3">
+                                <select name="category" class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                                    <option value="">Choose category</option>
+                                    <option value="phones">Phone</option>
+                                    <option value="shoes">Shoes</option>
+                                    <option value="clothes">Clothes</option>
+                                </select>
+                                <label for="floatingSelect"></label>
+                              </div>
                             <div class="d-grid">
                                 <button type="submit" class="btn btn-primary">Update Post</button>
+                                <a href="{% url 'photo_details' post.id %}" class="btn btn-outline-info mt-1">Go back</a>
                             </div>
                         </form>
                     </div>
