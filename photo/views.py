@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.core.exceptions import ValidationError
-from django.core.files.images import get_image_dimensions
+from django.core.paginator import Paginator
 from django.conf import settings
 from django.core.validators import FileExtensionValidator
 from django.contrib.auth import get_user_model
@@ -12,6 +12,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 def index(request):
     posts = Post.objects.all().order_by('-date_created')
+    p = Paginator(posts, 5) 
     context = {
         'posts': posts
     }

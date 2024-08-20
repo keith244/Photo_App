@@ -1,18 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager,AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.hashers import make_password
 # Create your models here.
 
-class CustomUser(BaseUserManager):
+class CustomUserManager(BaseUserManager):
     def create_user(self,username,email,password=None, **extra_fields):
         if not username:
             raise ValueError('The username field must be provided')
         if not email:
             raise ValueError('The email field must be provided')
         
-        username = self.model.normalize_username(username)
+        
         email = self.normalize_email(email)
-
-        extra_fields.pop('email',None)
         user = self.model(username = username, email=email, **extra_fields)
         user.set_password(password)
         user.save(using = self._db)
@@ -31,13 +30,17 @@ class User(AbstractBaseUser,PermissionsMixin):
     is_active = models.BooleanField(default= True)
     date_joined = models.DateTimeField(auto_now_add=True)
 
-    objects = CustomUser()
+    objects = CustomUserManager()
 
     USERNAME_FIELD  = 'username'
     REQUIRED_FIELDS = ['email']
 
     def __str__(self):
         return self.username
+    
+    def set_password(self, raw_password):
+        self.password = make_password(raw_password)
+        self.save(update_fields=['password'])
     
     class Meta:
         verbose_name = 'User'
