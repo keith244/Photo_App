@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/bootstrap/css/bootstrap.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     <title>Register</title>
 </head>
@@ -23,10 +24,10 @@
             <header>Register</header>
         </div>
         <div class="input-box">
-            <input type="text" name="username" id="" class="input-field" autocomplete="off" required placeholder="Username">
+            <input type="text" name="username" id="" value="{{username}}" class="input-field" autocomplete="off" required placeholder="Username">
         </div>
         <div class="input-box">
-            <input type="email" name="email" id="" class="input-field" autocomplete="off" required placeholder="Email">
+            <input type="email" name="email" id="" value="{{email}}" class="input-field" autocomplete="off" required placeholder="Email">
         </div>
         <div class="input-box">
             <input type="password" name="password" id="passwordField" class="input-field" autocomplete="off" required placeholder="Password">

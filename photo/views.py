@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Post,Profile
+from django.urls import reverse
+from .models import Post
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -10,6 +11,7 @@ from django.core.validators import FileExtensionValidator
 from django.contrib.auth import get_user_model
 # Create your views here.
 User = get_user_model()
+
 def index(request):
     posts = Post.objects.all().order_by('-date_created')
     p = Paginator(posts, 5) 
@@ -17,45 +19,6 @@ def index(request):
         'posts': posts
     }
     return render(request, 'photo/index.html',context)
-
-@login_required(login_url='login')
-def profile(request, username):
-    user = get_object_or_404(User, username=username)
-    profile, created = Profile.objects.get_or_create(user=user)
-
-    if request.method == 'POST' and request.user == user:
-        image = request.FILES.get('image')
-        about = request.POST.get('about')
-       
-        try:
-            if image:
-                if image.size > 5 * 1024 * 1024:
-                    raise ValidationError('Image too large (>5MB)')
-                profile.image = image
-            if about:
-                if len(about) > 500:
-                    raise ValidationError('The about is too long. About should be a maximum of 500 characters.')
-                profile.about = about
-            profile.full_clean()
-            profile.save()
-            if created:
-                messages.success(request, f'Profile created successfully')
-            else:
-                messages.success(request, 'Profile updated successfully')
-            return redirect('index')
-        except ValidationError as e:
-            messages.error(request, f'Validation error: {e}')
-        except IntegrityError:
-            messages.error(request, f'Error updating profile')
-        except IOError:
-            messages.error(request, f'Error handling uploaded file')
-
-    return render(request, 'photo/profile.html', {'profile': profile, 'is_own_profile': request.user == user})
-
-
-def profile_view(request,user_id):
-    return render(request, 'photo/profile_view.html')
-
 
 @login_required(login_url='login')
 def create_post(request):
@@ -104,7 +67,12 @@ def create_post(request):
 
 def post_details(request, post_id):
     post = get_object_or_404 (Post, id= post_id)
-    return render(request, 'photo/post_details.html',{'post':post})
+    referer = request.META.get('HTTP_REFERER', request.build_absolute_uri(reverse('index')))
+    context = {
+        'post':post,
+        'referer':referer,
+    }
+    return render(request, 'photo/post_details.html',context)
 
 @login_required(login_url='login')
 def update_post(request, post_id):

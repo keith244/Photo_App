@@ -11,21 +11,29 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+try:
+    with open(BASE_DIR / 'config.json') as conf_file:
+        config = json.load(conf_file)
+except FileNotFoundError as e:
+    raise FileNotFoundError(f"The configuration file 'config.json' was not found. {e}")
+
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-oh&nxopx$@rrpxow907f6$=#a&eysy-knc(lh9@p6ksue0p!@_'
+SECRET_KEY = config.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config.get('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config.get('ALLOWED_HOSTS')
 
 
 # Application definition
@@ -77,8 +85,12 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': config['DATABASES']['ENGINE'],
+        'NAME': config['DATABASES']['NAME'],
+        'USER': config ['DATABASES']['USER'],
+        'PASSWORD': config ['DATABASES']['PASSWORD'],
+        'HOST': config ['DATABASES']['HOST'],
+        'PORT': config ['DATABASES']['PORT'],
     }
 }
 
@@ -131,3 +143,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
 LOGIN_URL = 'login'
+
+HOST_ADDRESS = "127.0.0.1:8000"
+EMAIL_BACKEND = config.get('EMAIL_BACKEND')
+EMAIL_HOST = config.get('EMAIL_HOST')
+EMAIL_USE_TLS = config.get('EMAIL_USE_TLS')
+EMAIL_PORT = config.get('EMAIL_PORT')
+EMAIL_HOST_USER = config.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config.get('EMAIL_HOST_PASSWORD')

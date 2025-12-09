@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager,AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.hashers import make_password
+from django.conf import settings
 # Create your models here.
 
 class CustomUserManager(BaseUserManager):
@@ -40,8 +41,20 @@ class User(AbstractBaseUser,PermissionsMixin):
     
     def set_password(self, raw_password):
         self.password = make_password(raw_password)
-        self.save(update_fields=['password'])
+        if self.pk:
+            self.save(update_fields=['password'])
     
     class Meta:
         verbose_name = 'User'
         verbose_name_plural = 'Users'
+
+class Profile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
+    about = models.TextField(max_length=500, blank=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user.username}\'s Profile'
+    class Meta:
+        verbose_name_plural = 'User Profiles'

@@ -28,13 +28,12 @@ class Post(models.Model):
     class Meta:
         verbose_name_plural = 'Posts'
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
-    about = models.TextField(max_length=500, blank=True)
-    date_created = models.DateTimeField(auto_now_add=True)
+class Comments(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.TextField(max_length=200, blank=True)
 
     def __str__(self):
-        return f'{self.user.username}--{self.about}'
+        return f'{self.comment}'
+    
     class Meta:
-        verbose_name_plural = 'User Profiles'
+        verbose_name_plural = 'Comments'
